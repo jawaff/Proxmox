@@ -26,6 +26,7 @@ $STD apt-get install -y \
 $STD apt-get install -y ansible-core 
 $STD pip install passlib
 $STD apt-get install -y git
+$STD groupadd matrix
 $STD adduser --system --shell /usr/sbin/nologin --gecos 'matrix' --ingroup matrix --disabled-login --disabled-password matrix
 $STD sudo usermod -aG sudo matrix
 msg_ok "Installed Dependencies"
