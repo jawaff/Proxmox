@@ -27,8 +27,7 @@ $STD apt-get install -y \
 $STD apt-get install -y ansible-core 
 $STD pip install passlib
 $STD apt-get install -y git
-$STD groupadd matrix
-$STD adduser --system --shell /bin/bash --gecos 'matrix' --ingroup matrix --disabled-password --home /home/matrix  matrix
+$STD adduser --system --shell /bin/bash --gecos 'matrix' --group --disabled-password --home /home/matrix  matrix
 $STD sudo usermod -aG sudo matrix
 $STD usermod -u 1000 matrix
 $STD mkdir -p /matrix/synapse/storage/media-store
