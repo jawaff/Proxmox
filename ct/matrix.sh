@@ -18,7 +18,7 @@ EOF
 header_info
 echo -e "Loading..."
 APP="Matrix"
-var_disk="8"
+var_disk="15"
 var_cpu="4"
 var_ram="4096"
 var_os="debian"
