@@ -163,8 +163,8 @@ etherpad_admin_username: admin
 etherpad_admin_password: ETHERPAD_ADMIN_PASSWORD
 EOF
 
-$STD BASE_DOMAIN=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter your base domain (not the matrix subdomain):" 8 58 --title "BASE DOMAIN" 3>&1 1>&2 2>&3)
-$STD REVERSE_PROXY_HOST=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter your reverse proxy IP:" 8 58 --title "REVERSE PROXY" 3>&1 1>&2 2>&3)
+BASE_DOMAIN=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter your base domain (not the matrix subdomain):" 8 58 --title "BASE DOMAIN" 3>&1 1>&2 2>&3)
+REVERSE_PROXY_HOST=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter your reverse proxy IP:" 8 58 --title "REVERSE PROXY" 3>&1 1>&2 2>&3)
 
 $STD sed -i "s/BASE_DOMAIN/${BASE_DOMAIN}/g" /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
 $STD sed -i "s/BASE_DOMAIN/${BASE_DOMAIN}/g" /opt/matrix-docker-ansible-deploy/inventory/hosts
