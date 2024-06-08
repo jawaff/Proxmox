@@ -28,9 +28,11 @@ $STD apt-get install -y ansible-core
 $STD pip install passlib
 $STD apt-get install -y git
 $STD groupadd matrix
-$STD adduser --system --shell /usr/sbin/nologin --gecos 'matrix' --ingroup matrix --disabled-login --disabled-password matrix
+$STD adduser --system --shell /bin/bash --gecos 'matrix' --ingroup matrix --disabled-password matrix
 $STD sudo usermod -aG sudo matrix
-$STD usermod -u 1000 matrix
+$STD usermod -u 999 matrix
+$STD mkdir /home/matrix
+$STD chown -R matrix:matrix /home/matrix
 $STD mkdir -p /matrix/synapse/storage/media-store
 $STD mkdir -p /matrix/postgres/data
 $STD chown -R matrix:matrix /matrix
