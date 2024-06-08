@@ -42,11 +42,13 @@ $STD ./just roles
 msg_ok "Installed Matrix"
 
 msg_info "Creating Default Configurations"
+mkdir /opt/matrix-docker-ansible-deploy/inventory
 cat <<'EOF' >/opt/matrix-docker-ansible-deploy/inventory/hosts
 [matrix_servers]
 matrix.BASE_DOMAIN ansible_host=MATRIX_HOST ansible_ssh_user=root
 EOF
 
+mkdir -p /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com
 cat <<'EOF' >/opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
 ---
 # The bare domain name which represents your Matrix identity.
