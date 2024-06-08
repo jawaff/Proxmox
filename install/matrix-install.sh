@@ -43,14 +43,14 @@ $STD ./just roles
 msg_ok "Installed Matrix"
 
 msg_info "Creating Default Configurations"
-mkdir /opt/matrix-docker-ansible-deploy/inventory
-cat <<'EOF' >/opt/matrix-docker-ansible-deploy/inventory/hosts
+$STD mkdir /opt/matrix-docker-ansible-deploy/inventory
+$STD cat <<'EOF' >/opt/matrix-docker-ansible-deploy/inventory/hosts
 [matrix_servers]
 matrix.BASE_DOMAIN ansible_host=MATRIX_HOST ansible_ssh_user=root
 EOF
 
-mkdir -p /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com
-cat <<'EOF' >/opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
+$STD mkdir -p /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com
+$STD cat <<'EOF' >/opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
 ---
 # The bare domain name which represents your Matrix identity.
 # Matrix user ids for your server will be of the form (`@user:<matrix-domain>`).
@@ -163,21 +163,21 @@ etherpad_admin_username: admin
 etherpad_admin_password: ETHERPAD_ADMIN_PASSWORD
 EOF
 
-BASE_DOMAIN=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter your base domain (not the matrix subdomain):" 8 58 --title "BASE DOMAIN" 3>&1 1>&2 2>&3)
-REVERSE_PROXY_HOST=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter your reverse proxy IP:" 8 58 --title "REVERSE PROXY" 3>&1 1>&2 2>&3)
+$STD BASE_DOMAIN=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter your base domain (not the matrix subdomain):" 8 58 --title "BASE DOMAIN" 3>&1 1>&2 2>&3)
+$STD REVERSE_PROXY_HOST=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter your reverse proxy IP:" 8 58 --title "REVERSE PROXY" 3>&1 1>&2 2>&3)
 
-sed -i "s/BASE_DOMAIN/${BASE_DOMAIN}/g" /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
-sed -i "s/BASE_DOMAIN/${BASE_DOMAIN}/g" /opt/matrix-docker-ansible-deploy/inventory/hosts
-sed -i "s/GENERIC_SECRET_KEY/$(pwgen -s 64 1)/g" /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
-sed -i "s/REGISTRATION_ADMIN_SECRET/$(pwgen -s 64 1)/g" /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
-sed -i "s/POSTGRES_PASSWORD/$(pwgen -s 64 1)/g" /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
-sed -i "s/REVERSE_PROXY_HOST/${REVERSE_PROXY_HOST}/g" /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
-sed -i "s/MATRIX_HOST/$(hostname -I | awk '{print $1}')/g" /opt/matrix-docker-ansible-deploy/inventory/hosts
-sed -i "s/MATRIX_HOST/$(hostname -I | awk '{print $1}')/g" /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
-sed -i "s/ETHERPAD_ADMIN_PASSWORD/$(pwgen -s 64 1)/g" /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
+$STD sed -i "s/BASE_DOMAIN/${BASE_DOMAIN}/g" /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
+$STD sed -i "s/BASE_DOMAIN/${BASE_DOMAIN}/g" /opt/matrix-docker-ansible-deploy/inventory/hosts
+$STD sed -i "s/GENERIC_SECRET_KEY/$(pwgen -s 64 1)/g" /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
+$STD sed -i "s/REGISTRATION_ADMIN_SECRET/$(pwgen -s 64 1)/g" /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
+$STD sed -i "s/POSTGRES_PASSWORD/$(pwgen -s 64 1)/g" /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
+$STD sed -i "s/REVERSE_PROXY_HOST/${REVERSE_PROXY_HOST}/g" /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
+$STD sed -i "s/MATRIX_HOST/$(hostname -I | awk '{print $1}')/g" /opt/matrix-docker-ansible-deploy/inventory/hosts
+$STD sed -i "s/MATRIX_HOST/$(hostname -I | awk '{print $1}')/g" /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
+$STD sed -i "s/ETHERPAD_ADMIN_PASSWORD/$(pwgen -s 64 1)/g" /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
 
-FINAL_VAR_PATH=/opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.${BASE_DOMAIN}/vars.yml
-mv /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml $FINAL_VAR_PATH
+$STD mkdir -p "/opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.${BASE_DOMAIN}/"
+$STD mv /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml "/opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.${BASE_DOMAIN}/vars.yml"
 msg_ok "Created Default Configurations"
 
 
@@ -193,7 +193,7 @@ msg_info "Installing Docker $DOCKER_LATEST_VERSION"
 DOCKER_CONFIG_PATH='/etc/docker/daemon.json'
 mkdir -p $(dirname $DOCKER_CONFIG_PATH)
 echo -e '{\n  "log-driver": "journald"\n}' >/etc/docker/daemon.json
-$STD sh <(curl -sSL https://get.docker.com)
+sh <(curl -sSL https://get.docker.com)
 msg_ok "Installed Docker $DOCKER_LATEST_VERSION"
 
 read -r -p "Would you like to add Portainer? <y/N> " prompt
