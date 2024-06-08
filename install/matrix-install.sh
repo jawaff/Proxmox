@@ -30,6 +30,9 @@ $STD apt-get install -y git
 $STD groupadd matrix
 $STD adduser --shell /usr/sbin/nologin --gecos 'matrix' --ingroup matrix --disabled-login --disabled-password matrix
 $STD sudo usermod -aG sudo matrix
+$STD mkdir -p /matrix/synapse/storage/media-store
+$STD mkdir -p /matrix/postgres/data
+$STD chown -R matrix:matrix /matrix
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Matrix"
