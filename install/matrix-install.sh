@@ -28,7 +28,7 @@ $STD apt-get install -y ansible-core
 $STD pip install passlib
 $STD apt-get install -y git
 $STD groupadd matrix
-$STD adduser --system --shell /usr/sbin/nologin --gecos 'matrix' --ingroup matrix --disabled-login --disabled-password matrix
+$STD adduser --shell /usr/sbin/nologin --gecos 'matrix' --ingroup matrix --disabled-login --disabled-password matrix
 $STD sudo usermod -aG sudo matrix
 msg_ok "Installed Dependencies"
 
@@ -167,8 +167,10 @@ etherpad_admin_username: admin
 etherpad_admin_password: ETHERPAD_ADMIN_PASSWORD
 EOF
 
-BASE_DOMAIN=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter your base domain (not the matrix subdomain):" 8 58 --title "BASE DOMAIN" 3>&1 1>&2 2>&3)
-REVERSE_PROXY_HOST=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter your reverse proxy IP:" 8 58 --title "REVERSE PROXY" 3>&1 1>&2 2>&3)
+read -p "Enter your base domain (not the matrix subdomain): " BASE_DOMAIN
+read -p "Enter your reverse proxy IP: " REVERSE_PROXY_HOST
+#BASE_DOMAIN=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter your base domain (not the matrix subdomain):" 8 58 --title "BASE DOMAIN" 3>&1 1>&2 2>&3)
+#REVERSE_PROXY_HOST=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter your reverse proxy IP:" 8 58 --title "REVERSE PROXY" 3>&1 1>&2 2>&3)
 
 $STD sed -i "s/BASE_DOMAIN/${BASE_DOMAIN}/g" /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
 $STD sed -i "s/BASE_DOMAIN/${BASE_DOMAIN}/g" /opt/matrix-docker-ansible-deploy/inventory/hosts
