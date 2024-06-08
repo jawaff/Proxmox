@@ -19,6 +19,7 @@ $STD apt-get install -y mc
 # Dependencies are downloaded according to this document.
 # https://github.com/spantaleev/matrix-docker-ansible-deploy/blob/master/docs/prerequisites.md
 $STD apt-get install -y sudo
+$STD apt-get install -y pwgen
 $STD apt-get install -y \
   python3 \
   python3-dev \
@@ -162,18 +163,18 @@ etherpad_admin_username: admin
 etherpad_admin_password: ETHERPAD_ADMIN_PASSWORD
 EOF
 
-BASE_DOMAIN=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "Enter your base domain (not the matrix subdomain):" 3>&1 1>&2 2>&3)
-REVERSE_PROXY_HOST=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "Enter your reverse proxy IP:" 3>&1 1>&2 2>&3)
+BASE_DOMAIN=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter your base domain (not the matrix subdomain):" 8 58 --title "BASE DOMAIN" 3>&1 1>&2 2>&3)
+REVERSE_PROXY_HOST=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter your reverse proxy IP:" 8 58 --title "REVERSE PROXY" 3>&1 1>&2 2>&3)
 
-sed -i 's/BASE_DOMAIN/${BASE_DOMAIN}/g' /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
-sed -i 's/BASE_DOMAIN/${BASE_DOMAIN}/g' /opt/matrix-docker-ansible-deploy/inventory/hosts
-sed -i 's/GENERIC_SECRET_KEY/$(pwgen -s 64 1)/g' /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
-sed -i 's/REGISTRATION_ADMIN_SECRET/$(pwgen -s 64 1)/g' /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
-sed -i 's/POSTGRES_PASSWORD/$(pwgen -s 64 1)/g' /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
-sed -i 's/REVERSE_PROXY_HOST/${REVERSE_PROXY_HOST}/g' /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
-sed -i 's/MATRIX_HOST/$(hostname -I | awk '{print $1}')/g' /opt/matrix-docker-ansible-deploy/inventory/hosts
-sed -i 's/MATRIX_HOST/$(hostname -I | awk '{print $1}')/g' /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
-sed -i 's/ETHERPAD_ADMIN_PASSWORD/$(pwgen -s 64 1)/g' /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
+sed -i "s/BASE_DOMAIN/${BASE_DOMAIN}/g" /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
+sed -i "s/BASE_DOMAIN/${BASE_DOMAIN}/g" /opt/matrix-docker-ansible-deploy/inventory/hosts
+sed -i "s/GENERIC_SECRET_KEY/$(pwgen -s 64 1)/g" /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
+sed -i "s/REGISTRATION_ADMIN_SECRET/$(pwgen -s 64 1)/g" /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
+sed -i "s/POSTGRES_PASSWORD/$(pwgen -s 64 1)/g" /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
+sed -i "s/REVERSE_PROXY_HOST/${REVERSE_PROXY_HOST}/g" /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
+sed -i "s/MATRIX_HOST/$(hostname -I | awk '{print $1}')/g" /opt/matrix-docker-ansible-deploy/inventory/hosts
+sed -i "s/MATRIX_HOST/$(hostname -I | awk '{print $1}')/g" /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
+sed -i "s/ETHERPAD_ADMIN_PASSWORD/$(pwgen -s 64 1)/g" /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
 
 FINAL_VAR_PATH=/opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.${BASE_DOMAIN}/vars.yml
 mv /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml $FINAL_VAR_PATH
