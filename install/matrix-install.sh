@@ -146,8 +146,10 @@ jitsi_web_stun_servers:
 
 # Jits will use the Matrix User Verification Service for authentication
 jitsi_enable_auth: true
-jitsi_enable_guests: false
-jitsi_auth_type: matrix
+jitsi_enable_guests: true
+jitsi_prosody_auth_internal_accounts:
+  - username: "jitsi-moderator"
+    password: "JITSI_PASSWORD"
 
 # Refer to https://github.com/spantaleev/matrix-docker-ansible-deploy/blob/master/docs/configuring-playbook-user-verification-service.md
 # We need to install matrix and obtain an access token using element before we can install UVS.
@@ -174,6 +176,7 @@ $STD sed -i "s/POSTGRES_PASSWORD/$(pwgen -s 64 1)/g" /opt/matrix-docker-ansible-
 $STD sed -i "s/REVERSE_PROXY_HOST/${REVERSE_PROXY_HOST}/g" /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
 $STD sed -i "s/MATRIX_HOST/$(hostname -I | awk '{print $1}')/g" /opt/matrix-docker-ansible-deploy/inventory/hosts
 $STD sed -i "s/MATRIX_HOST/$(hostname -I | awk '{print $1}')/g" /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
+$STD sed -i "s/JITSI_PASSWORD/$(pwgen -s 64 1)/g" /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
 $STD sed -i "s/ETHERPAD_ADMIN_PASSWORD/$(pwgen -s 64 1)/g" /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
 
 $STD mkdir -p "/opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.${BASE_DOMAIN}/"
