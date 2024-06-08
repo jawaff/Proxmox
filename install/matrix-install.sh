@@ -38,7 +38,7 @@ $STD git clone https://github.com/spantaleev/matrix-docker-ansible-deploy.git
 $STD curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to /opt/matrix-docker-ansible-deploy/
 $STD cd matrix-docker-ansible-deploy
 $STD chmod +x just
-$STD just roles
+$STD ./just roles
 msg_ok "Installed Matrix"
 
 msg_info "Creating Default Configurations"
