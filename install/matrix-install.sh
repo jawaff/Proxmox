@@ -29,10 +29,12 @@ $STD pip install passlib
 $STD apt-get install -y git
 $STD adduser --system --shell /bin/bash --gecos 'matrix' --group --disabled-password --home /home/matrix  matrix
 $STD sudo usermod -aG sudo matrix
-$STD usermod -u 1000 matrix
 $STD mkdir -p /matrix/synapse/storage/media-store
 $STD mkdir -p /matrix/postgres/data
-$STD chown -R matrix:matrix /matrix
+$STD chown -R 1000:1000 /matrix
+$STD chown -R 1000:1000 /home/matrix
+$STD usermod -u 1000 matrix
+$STD groupmod -g 1000 matrix
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Matrix"
