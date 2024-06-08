@@ -144,7 +144,8 @@ jitsi_enabled: true
 jitsi_web_stun_servers:
   - stun:turn.BASE_DOMAIN:443
 
-# Jits will use the Matrix User Verification Service for authentication
+# By default internal auth will be used with the below moderator account as the only moderator. Refer to the commented out UVS lines below
+# to switch over to the matrix authentication strategy for Jitsi.
 jitsi_enable_auth: true
 jitsi_enable_guests: true
 jitsi_prosody_auth_internal_accounts:
@@ -153,6 +154,7 @@ jitsi_prosody_auth_internal_accounts:
 
 # Refer to https://github.com/spantaleev/matrix-docker-ansible-deploy/blob/master/docs/configuring-playbook-user-verification-service.md
 # We need to install matrix and obtain an access token using element before we can install UVS.
+#jitsi_auth_type: matrix
 #matrix_user_verification_service_enabled: true
 #matrix_user_verification_service_uvs_access_token: "INSERT ACCESS TOKEN HERE"
 #matrix_user_verification_service_uvs_pin_openid_verify_server_name: false
