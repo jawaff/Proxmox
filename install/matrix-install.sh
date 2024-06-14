@@ -27,14 +27,14 @@ $STD apt-get install -y \
 $STD apt-get install -y ansible-core 
 $STD pip install passlib
 $STD apt-get install -y git
-$STD adduser --system --shell /bin/bash --gecos 'matrix' --group --disabled-password --home /home/matrix  matrix
-$STD sudo usermod -aG sudo matrix
-$STD mkdir -p /matrix/synapse/storage/media-store
-$STD mkdir -p /matrix/postgres/data
-$STD chown -R 1000:1000 /matrix
-$STD chown -R 1000:1000 /home/matrix
-$STD usermod -u 1000 matrix
-$STD groupmod -g 1000 matrix
+#$STD adduser --system --shell /bin/bash --gecos 'matrix' --group --disabled-password --home /home/matrix  matrix
+#$STD sudo usermod -aG sudo matrix
+#$STD mkdir -p /matrix/synapse/storage/media-store
+#$STD mkdir -p /matrix/postgres/data
+#$STD chown -R 1000:1000 /matrix
+#$STD chown -R 1000:1000 /home/matrix
+#$STD usermod -u 1000 matrix
+#$STD groupmod -g 1000 matrix
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Matrix"
@@ -146,6 +146,8 @@ exim_relay_relay_auth_password: "getThisFromYourGmailAccount"
 
 jitsi_enabled: true
 
+matrix_coturn_turn_external_ip_address: "PUBLIC_IP"
+
 jitsi_web_stun_servers:
   - stun:turn.BASE_DOMAIN:443
 
@@ -167,12 +169,20 @@ jitsi_jvb_container_extra_arguments:
 etherpad_enabled: true
 etherpad_admin_username: admin
 etherpad_admin_password: ETHERPAD_ADMIN_PASSWORD
+
+# Uncomment the following and configure your external postgres server.
+#devture_postgres_enabled: false
+#matrix_synapse_database_host: "your-postgres-server-hostname"
+#matrix_synapse_database_user: "your-postgres-server-username"
+#matrix_synapse_database_password: "your-postgres-server-password"
+#matrix_synapse_database_database: "your-postgres-server-database-name"
 EOF
 
-read -p "Enter your base domain (not the matrix subdomain): " BASE_DOMAIN
-read -p "Enter your reverse proxy IP: " REVERSE_PROXY_HOST
-#BASE_DOMAIN=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter your base domain (not the matrix subdomain):" 8 58 --title "BASE DOMAIN" 3>&1 1>&2 2>&3)
-#REVERSE_PROXY_HOST=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter your reverse proxy IP:" 8 58 --title "REVERSE PROXY" 3>&1 1>&2 2>&3)
+#read -p "Enter your base domain (not the matrix subdomain): " BASE_DOMAIN
+#read -p "Enter your reverse proxy IP: " REVERSE_PROXY_HOST
+BASE_DOMAIN=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter your base domain (not the matrix subdomain):" 8 58 --title "BASE DOMAIN" 3>&1 1>&2 2>&3)
+REVERSE_PROXY_HOST=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter your reverse proxy IP:" 8 58 --title "REVERSE PROXY" 3>&1 1>&2 2>&3)
+PUBLIC_IP=$(curl -s ifconfig.me) 
 
 $STD sed -i "s/BASE_DOMAIN/${BASE_DOMAIN}/g" /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
 $STD sed -i "s/BASE_DOMAIN/${BASE_DOMAIN}/g" /opt/matrix-docker-ansible-deploy/inventory/hosts
@@ -182,6 +192,7 @@ $STD sed -i "s/POSTGRES_PASSWORD/$(pwgen -s 64 1)/g" /opt/matrix-docker-ansible-
 $STD sed -i "s/REVERSE_PROXY_HOST/${REVERSE_PROXY_HOST}/g" /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
 $STD sed -i "s/MATRIX_HOST/$(hostname -I | awk '{print $1}')/g" /opt/matrix-docker-ansible-deploy/inventory/hosts
 $STD sed -i "s/MATRIX_HOST/$(hostname -I | awk '{print $1}')/g" /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
+$STD sed -i "s/PUBLIC_IP/${PUBLIC_IP}/g" /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
 $STD sed -i "s/JITSI_PASSWORD/$(pwgen -s 64 1)/g" /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
 $STD sed -i "s/ETHERPAD_ADMIN_PASSWORD/$(pwgen -s 64 1)/g" /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
 
