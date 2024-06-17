@@ -144,18 +144,33 @@ exim_relay_relay_auth: true
 exim_relay_relay_auth_username: "example@gmail.com"
 exim_relay_relay_auth_password: "getThisFromYourGmailAccount"
 
-jitsi_enabled: true
+# Jitsi is disabled by default due to difficulty in NAT environments getting LAN clients to work with WAN clients.
+# LAN to LAN and WAN to WAN clients did work though.
+jitsi_enabled: false
 
-matrix_coturn_turn_external_ip_address: "PUBLIC_IP"
+# Coturn is also disabled by default due to difficulty in NAT environments. LAN to LAN clients work fine, but WAN clients
+# are difficult to get supported.
+#matrix_coturn_turn_external_ip_address: "PUBLIC_IP"
+matrix_coturn_enabled: false
 
-jitsi_web_stun_servers:
-  - stun:turn.BASE_DOMAIN:443
+# This assumes an external turn server is used. Update your DNS record for turn.BASE_DOMAIN to point to your turn server.
+# Then update the shared secret below with the turn server's shared secret.
+# It's recommended to use a shared secret over the username and password for Jitsi support.
+matrix_synapse_turn_shared_secret: 'INSERT TURN SHARED SECRET HERE'
+#matrix_synapse_turn_username: ''
+#matrix_synapse_turn_password: ''
+matrix_synapse_turn_uris:
+  - turn:turn.BASE_DOMAIN?transport=udp
+  - turn:turn.BASE_DOMAIN?transport=tcp
+
+#jitsi_web_stun_servers:
+#  - stun:turn.BASE_DOMAIN
 
 # By default internal auth will be used with the below moderator account as the only moderator. Refer to the commented out UVS lines below
 # to switch over to the matrix authentication strategy for Jitsi.
-jitsi_enable_auth: true
-jitsi_enable_guests: true
-jitsi_auth_type: matrix
+#jitsi_enable_auth: true
+#jitsi_enable_guests: true
+#jitsi_auth_type: matrix
 
 # Refer to https://github.com/spantaleev/matrix-docker-ansible-deploy/blob/master/docs/configuring-playbook-user-verification-service.md
 # We need to install matrix and obtain an access token using element before we can install UVS.
@@ -163,8 +178,8 @@ jitsi_auth_type: matrix
 #matrix_user_verification_service_uvs_access_token: "INSERT ACCESS TOKEN HERE"
 #matrix_user_verification_service_uvs_pin_openid_verify_server_name: false
 
-jitsi_jvb_container_extra_arguments:
-  - '--env "JVB_ADVERTISE_IPS=MATRIX_HOST"'
+#jitsi_jvb_container_extra_arguments:
+#  - '--env "JVB_ADVERTISE_IPS=MATRIX_HOST"'
 
 etherpad_enabled: true
 etherpad_admin_username: admin
@@ -176,12 +191,14 @@ etherpad_admin_password: ETHERPAD_ADMIN_PASSWORD
 #matrix_synapse_database_user: "your-postgres-server-username"
 #matrix_synapse_database_password: "your-postgres-server-password"
 #matrix_synapse_database_database: "your-postgres-server-database-name"
+
+matrix_sliding_sync_enabled: true
 EOF
 
-#read -p "Enter your base domain (not the matrix subdomain): " BASE_DOMAIN
-#read -p "Enter your reverse proxy IP: " REVERSE_PROXY_HOST
-BASE_DOMAIN=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter your base domain (not the matrix subdomain):" 8 58 --title "BASE DOMAIN" 3>&1 1>&2 2>&3)
-REVERSE_PROXY_HOST=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter your reverse proxy IP:" 8 58 --title "REVERSE PROXY" 3>&1 1>&2 2>&3)
+read -r -p "Enter your base domain (not the matrix subdomain): " BASE_DOMAIN
+read -r -p "Enter your reverse proxy IP: " REVERSE_PROXY_HOST
+#BASE_DOMAIN=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter your base domain (not the matrix subdomain):" 8 58 --title "BASE DOMAIN" 3>&1 1>&2 2>&3)
+#REVERSE_PROXY_HOST=$(whiptail --backtitle "Proxmox VE Helper Scripts" --inputbox "Enter your reverse proxy IP:" 8 58 --title "REVERSE PROXY" 3>&1 1>&2 2>&3)
 PUBLIC_IP=$(curl -s ifconfig.me) 
 
 $STD sed -i "s/BASE_DOMAIN/${BASE_DOMAIN}/g" /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
