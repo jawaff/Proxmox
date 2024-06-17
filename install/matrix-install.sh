@@ -94,6 +94,13 @@ matrix_synapse_admin_enabled: true
 
 matrix_client_element_enabled: true
 matrix_client_element_themes_enabled: true
+matrix_client_element_configuration_extension_json: '{
+  "features": {
+    "feature_video_rooms": true,
+    "feature_element_call_video_rooms": true,
+    "feature_group_calls": true
+  }
+}'
 
 # Whitelist for only supporting federation with certain servers.
 #matrix_synapse_federation_domain_whitelist:
@@ -185,9 +192,9 @@ matrix_synapse_turn_uris:
 #jitsi_jvb_container_extra_arguments:
 #  - '--env "JVB_ADVERTISE_IPS=MATRIX_HOST"'
 
-etherpad_enabled: true
-etherpad_admin_username: admin
-etherpad_admin_password: ETHERPAD_ADMIN_PASSWORD
+#etherpad_enabled: true
+#etherpad_admin_username: admin
+#etherpad_admin_password: ETHERPAD_ADMIN_PASSWORD
 
 # Uncomment the following and configure your external postgres server.
 #devture_postgres_enabled: false
