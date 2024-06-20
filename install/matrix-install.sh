@@ -32,8 +32,15 @@ read -r -p "Are you going to use mountpoints for uploaded media and the database
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   $STD adduser --system --shell /bin/bash --gecos 'matrix' --group --disabled-password --home /home/matrix  matrix
   $STD sudo usermod -aG sudo matrix
-  $STD mkdir -p /matrix/synapse/storage/media-store
-  $STD mkdir -p /matrix/postgres/data
+  read -r -p "Do you want a mount point for uploaded media? <y/N> " prompt
+  if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
+    $STD mkdir -p /matrix/synapse/storage/media-store
+  else
+    read -r -p "Do you want a mount point for your Postgres database? <y/N> " prompt
+    if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
+      $STD mkdir -p /matrix/postgres/data
+    fi
+  fi
   $STD chown -R 1000:1000 /matrix
   $STD chown -R 1000:1000 /home/matrix
   $STD usermod -u 1000 matrix
