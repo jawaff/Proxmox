@@ -21,8 +21,25 @@ $STD apt-get install -y git
 msg_ok "Installed Dependencies"
 
 msg_info "Installing k0s Kubernetes"
+$STD sysctl vm.swappiness=0
+$STD swapoff -a
+
+$STD echo 'net.ipv4.ip_forward=1' >> /etc/sysctl.conf
+$STD sysctl --system
+
 $STD bash <(curl -sSLf https://get.k0s.sh)
-$STD k0s install controller --single
+
+read -r -p "Is this going to be the controller node? <y/N> " prompt
+if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
+  read -r -p "Will you only be installing a single node? <y/N> " prompt
+  if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
+    $STD k0s install controller --single
+  else
+    $STD k0s install controller --enable-worker
+  fi
+else
+  $STD k0s install worker
+fi
 $STD k0s start
 mkdir -p /etc/k0s
 k0s config create > /etc/k0s/k0s.yaml
