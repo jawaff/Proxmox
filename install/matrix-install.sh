@@ -31,7 +31,7 @@ $STD apt-get install -y git
 read -r -p "Are you going to use mountpoints for uploaded media and the database? <y/N> " prompt
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   $STD adduser --system --shell /bin/bash --gecos 'matrix' --group --disabled-password --home /home/matrix  matrix
-  $STD sudo usermod -aG sudo matrix
+  $STD usermod -aG sudo matrix
   read -r -p "Do you want a mount point for uploaded media? <y/N> " prompt
   if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
     $STD mkdir -p /matrix/synapse/storage/media-store
@@ -174,12 +174,12 @@ matrix_coturn_enabled: false
 # This assumes an external turn server is used. Update your DNS record for turn.BASE_DOMAIN to point to your turn server.
 # Then update the shared secret below with the turn server's shared secret.
 # It's recommended to use a shared secret over the username and password for Jitsi support.
-matrix_synapse_turn_shared_secret: 'INSERT TURN SHARED SECRET HERE'
+#matrix_synapse_turn_shared_secret: 'INSERT TURN SHARED SECRET HERE'
 #matrix_synapse_turn_username: ''
 #matrix_synapse_turn_password: ''
-matrix_synapse_turn_uris:
-  - turn:turn.BASE_DOMAIN?transport=udp
-  - turn:turn.BASE_DOMAIN?transport=tcp
+#matrix_synapse_turn_uris:
+#  - turn:turn.BASE_DOMAIN?transport=udp
+#  - turn:turn.BASE_DOMAIN?transport=tcp
 
 #jitsi_web_stun_servers:
 #  - stun:turn.BASE_DOMAIN
