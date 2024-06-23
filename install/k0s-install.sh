@@ -21,9 +21,6 @@ $STD apt-get install -y git
 msg_ok "Installed Dependencies"
 
 msg_info "Installing k0s Kubernetes"
-$STD sysctl vm.swappiness=0
-$STD swapoff -a
-
 $STD echo 'net.ipv4.ip_forward=1' >> /etc/sysctl.conf
 $STD sysctl --system
 
