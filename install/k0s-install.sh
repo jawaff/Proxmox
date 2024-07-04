@@ -21,9 +21,6 @@ $STD apt-get install -y git
 msg_ok "Installed Dependencies"
 
 msg_info "Installing k0s Kubernetes"
-$STD echo 'net.ipv4.ip_forward=1' >> /etc/sysctl.conf
-$STD sysctl --system
-
 $STD bash <(curl -sSLf https://get.k0s.sh)
 
 read -r -p "Is this going to be the controller node? <y/N> " prompt

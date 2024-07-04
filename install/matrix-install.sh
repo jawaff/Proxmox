@@ -27,25 +27,6 @@ $STD apt-get install -y \
 $STD apt-get install -y ansible-core 
 $STD pip install passlib
 $STD apt-get install -y git
-
-read -r -p "Are you going to use mountpoints for uploaded media and the database? <y/N> " prompt
-if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
-  $STD adduser --system --shell /bin/bash --gecos 'matrix' --group --disabled-password --home /home/matrix  matrix
-  $STD usermod -aG sudo matrix
-  read -r -p "Do you want a mount point for uploaded media? <y/N> " prompt
-  if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
-    $STD mkdir -p /matrix/synapse/storage/media-store
-  else
-    read -r -p "Do you want a mount point for your Postgres database? <y/N> " prompt
-    if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
-      $STD mkdir -p /matrix/postgres/data
-    fi
-  fi
-  $STD chown -R 1000:1000 /matrix
-  $STD chown -R 1000:1000 /home/matrix
-  $STD usermod -u 1000 matrix
-  $STD groupmod -g 1000 matrix
-fi
 msg_ok "Installed Dependencies"
 
 msg_info "Installing Matrix"
@@ -211,6 +192,14 @@ matrix_coturn_enabled: false
 #matrix_synapse_database_database: "your-postgres-server-database-name"
 
 matrix_sliding_sync_enabled: true
+
+matrix_bot_maubot_enabled: false
+# Uncomment and adjust this part if you'd like to use a username different than the default
+#matrix_bot_maubot_login: mau.bot
+# Generate a strong password here. Consider generating it with `pwgen -s 64 1`
+#matrix_bot_maubot_initial_password: MAUBOT_PASSWORD
+#matrix_bot_maubot_admins:
+#  - <user>: <password>
 EOF
 
 read -r -p "Enter your base domain (not the matrix subdomain): " BASE_DOMAIN
@@ -230,6 +219,7 @@ $STD sed -i "s/MATRIX_HOST/$(hostname -I | awk '{print $1}')/g" /opt/matrix-dock
 $STD sed -i "s/PUBLIC_IP/${PUBLIC_IP}/g" /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
 $STD sed -i "s/JITSI_PASSWORD/$(pwgen -s 64 1)/g" /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
 $STD sed -i "s/ETHERPAD_ADMIN_PASSWORD/$(pwgen -s 64 1)/g" /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
+$STD sed -i "s/MAUBOT_PASSWORD/$(pwgen -s 64 1)/g" /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml
 
 $STD mkdir -p "/opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.${BASE_DOMAIN}/"
 $STD mv /opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.example.com/vars.yml "/opt/matrix-docker-ansible-deploy/inventory/host_vars/matrix.${BASE_DOMAIN}/vars.yml"

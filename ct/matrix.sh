@@ -18,7 +18,7 @@ EOF
 header_info
 echo -e "Loading..."
 APP="Matrix"
-var_disk="15"
+var_disk="50"
 var_cpu="4"
 var_ram="4096"
 var_os="debian"
@@ -57,6 +57,9 @@ if [[ ! -f /etc/systemd/system/matrix.service ]]; then msg_error "No ${APP} Inst
 msg_info "Updating $APP LXC"
 apt-get update &>/dev/null
 pip install passlib --upgrade
+cd /opt/matrix-docker-ansible-deploy
+git pull
+ansible-playbook -i inventory/hosts setup.yml --tags=setup-all
 msg_ok "Updated $APP LXC"
 exit
 }
