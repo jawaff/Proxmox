@@ -58,7 +58,7 @@ msg_info "Updating $APP LXC"
 apt-get update &>/dev/null
 pip install passlib --upgrade
 cd /opt/matrix-docker-ansible-deploy
-git pull
+./just update
 ansible-playbook -i inventory/hosts setup.yml --tags=setup-all
 msg_ok "Updated $APP LXC"
 exit
