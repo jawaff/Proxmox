@@ -200,6 +200,13 @@ matrix_bot_maubot_enabled: false
 #matrix_bot_maubot_initial_password: MAUBOT_PASSWORD
 #matrix_bot_maubot_admins:
 #  - <user>: <password>
+
+# Video Call Configurations
+matrix_element_call_enabled: true
+matrix_rtc_enabled: true
+matrix_element_call_hostname: element-call.BASE_DOMAIN
+matrix_synapse_allow_guest_access: true
+
 EOF
 
 read -r -p "Enter your base domain (not the matrix subdomain): " BASE_DOMAIN
